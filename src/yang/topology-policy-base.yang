@@ -1,0 +1,106 @@
+module topology-policy-base {
+
+  namespace "http://example.com/topology-policy-base";
+  prefix tpb;
+
+  import network-policy-base {
+    prefix npb;
+  }
+  import ietf-inet-types {
+    prefix inet;
+  }
+  import tailf-common {
+    prefix tailf;
+  }
+  import tailf-ncs {
+    prefix ncs;
+  }
+
+  description
+    "This is an add on model to the network-policy-base package/service providing the framework for topology based policy";
+
+  revision 2017-11-21 {
+    description
+      "Initial revision.";
+  }
+
+  grouping network-actions {
+    tailf:action load-topology-template {
+      tailf:info "Load Network Topology Template";
+      tailf:actionpoint loadservicetemplate-action;
+      input {
+        leaf network-name {
+          tailf:info "Name of the new branch";
+          type string;
+        }
+        leaf topology-template {
+          type leafref {
+            path "/npb:network/npb:policy-definitions/npb:network/topology-templates/name";
+          }
+        }
+      }
+      output {
+      }
+    }
+  }
+
+  grouping toplogy-general-policy-grouping {
+  }
+
+  augment /npb:network/npb:policy-definitions/npb:network {
+    list topology-templates {
+      key name;
+      leaf name {
+        type string;
+      }
+      leaf model-template-file {
+        type string;
+      }
+    }
+  }
+
+  augment /npb:network {
+    uses network-actions;
+  }
+
+  augment /npb:network/npb:network-service {
+    list topology {
+      description "The topology (physical, logical, etc.) and its associated policies";
+      key name;
+      leaf name {
+        type string;
+      }
+      container policies {
+        uses toplogy-general-policy-grouping;
+      }
+      list endpoint {
+        key topology-name;
+        leaf topology-name {
+          type string;
+        }
+        container policies {
+        }
+      }
+      list connection {
+        key connection-name;
+        leaf connection-name {
+          type string;
+        }
+        container policies {
+        }
+      }
+    }
+  }
+
+  augment /npb:network/npb:policy-definitions {
+    container topology {
+    }
+    container endpoint {
+    }
+    container connection {
+    }
+
+  }
+
+
+}
