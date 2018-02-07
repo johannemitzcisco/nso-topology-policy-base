@@ -11,7 +11,7 @@ FXS = $(SRC:yang/%.yang=../load-dir/%.fxs)
 ## Uncomment and patch the line below if you have a dependency to a NED
 ## or to other YANG files
 # YANGPATH += ../../<ned-name>/src/ncsc-out/modules/yang 
-YANGPATH += ../../network-policy-base/src/yang
+YANGPATH += ../../nso-network-policy-base/src/yang
 
 NCSCPATH   = $(YANGPATH:%=--yangpath %)
 YANGERPATH = $(YANGPATH:%=--path %)
